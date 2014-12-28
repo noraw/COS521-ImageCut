@@ -1,3 +1,3 @@
-imageIn = '../pictures/circle.jpg';
-IG = imageToGraph(imageIn, .1, 4, 5);
-createGraph(IG);
+imageIn = '../pictures/BW5.jpg';
+IG = imageToGraph(imageIn, .1, 4, 2);
+%imshow(full(IG.graph));

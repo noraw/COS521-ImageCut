@@ -17,13 +17,17 @@ classdef imageToGraph
     methods
         function IG = imageToGraph(imageIn, oI, oX, r)
              IG.image = imread(imageIn);
-             IG.imagehsv = rgb2hsv(IG.image); 
              [IG.rows, IG.columns, x] = size(IG.image);
+             if(x == 1)
+                 IG.image = cat(3, IG.image,IG.image,IG.image);
+             end
+             IG.imagehsv = rgb2hsv(IG.image); 
              IG.n = IG.rows*IG.columns;
              IG.graph = sparse(IG.n, IG.n);
              IG.oI = oI;
              IG.oX = oX;
              IG.r = r;
+             IG = createGraph(IG);
         end
         
         function pos = graphIDToImagePosition(IG, id)
@@ -54,14 +58,13 @@ classdef imageToGraph
             exp(-dist^2 / IG.oI);
         end
 
-        function createGraph(IG)
+        function IG = createGraph(IG)
             for i1 = 1 : IG.rows
-                i1
                 for j1 = 1 : IG.columns
                     for i2 = max(i1-IG.r, 1) : min(i1+IG.r, IG.columns)
-                        for j2 = max(i2-IG.r, 1) : min(i2+IG.r, IG.columns)
+                        for j2 = max(j1-IG.r, 1) : min(j1+IG.r, IG.columns)
                             p1 = [i1, j1];
-                            p2 = [i2, j2];
+                            p2 = [i2, j2];                        
                             dist = norm(p1 - p2);
                             if dist < IG.r
                                 EDist = exp(-dist^2 / IG.oX);
