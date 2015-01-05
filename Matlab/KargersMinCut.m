@@ -1,5 +1,7 @@
 function KargersMinCut(IG, ids)
 
+
+        % test text for cycles machines
 	s = size(IG);
 
 	if nargin < 2
