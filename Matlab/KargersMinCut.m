@@ -44,3 +44,4 @@ function [new_graph, ids] = contractGraph(IG, r, c, ids)
 	new_graph(:,1) = [0; (IG(ind,r) + IG(ind,c))];
 
 	new_graph(2:end, 2:end) = IG(ind, ind);
+end
