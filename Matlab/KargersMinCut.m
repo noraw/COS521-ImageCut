@@ -1,4 +1,4 @@
-function KargersMinCut(IG, ids)
+function [IG, ids] = KargersMinCut(IG, ids)
 
 
 	s = size(IG);
@@ -7,41 +7,62 @@ function KargersMinCut(IG, ids)
 		ids = num2cell(1:s(1));
 	end
 
-	% terminating_number_vertices = 2;
-	% if s(1) > 6
-	% 	terminating_number_vertices = s(1) / sqrt(2) + 1;
-	% end
+	terminating_number_vertices = 2;
+	if s(1) > 6
+		terminating_number_vertices = s(1) / sqrt(2) + 1;
+	end
 
-	% while s(1) > terminating_number_vertices
+	while s(1) > terminating_number_vertices
 	noSelfLoops = IG - diag(diag(IG));
 
-	total_sum = sum(IG(:));
-	cumulative_sum = cumsum(IG(:));
+	total_sum = sum(noSelfLoops(:));
+	cumulative_sum = cumsum(noSelfLoops(:));
 
 	% Selecting random edge
-	threshold_value = random() * total_sum;
-	[r,c] = find(cumulative_sum > threshold_value, 1);
+	threshold_value = rand() * total_sum;
+	i = find(cumulative_sum > threshold_value, 1);
 
-	[IG, ids] = contractGraph(IG, r, c, ids)
+	%Finding coordinates of selected edge
+	r = mod(i,s(1));
+	c = ceil(i / s(1));
+	if(r == 0)
+		r = s(1);
+	end
+
+	%disp(i)
+	%disp(r)
+	%disp(c)
+
+	[IG, ids] = contractGraph(noSelfLoops, r, c, ids);
 
 end
 
 function [new_graph, ids] = contractGraph(IG, r, c, ids)
 
 	s = size(IG);
-	s = s-1;
+	s_new = s-1;
 
-	ind = ones( length(IG), 1 );
+	%disp('coords')
+	%disp(r)
+	%disp(c)
+
+	ind = ones( s(1), 1 );
 	ind = logical(ind);
 	ind(r) = 0;
 	ind(c) = 0;
 
+	%disp('sizes')
+	%disp(s)
+	%disp(size(ind))
+	%disp(size(ids))
+
 	ids = [ {[ids{not(ind)}]} ids{ind} ];
 
-	new_graph = zeros(s);
+	new_graph = zeros(s_new);
 
 	new_graph(1,:) = [0  (IG(r,ind) + IG(c,ind))];
 	new_graph(:,1) = [0; (IG(ind,r) + IG(ind,c))];
 
 	new_graph(2:end, 2:end) = IG(ind, ind);
+
 end
