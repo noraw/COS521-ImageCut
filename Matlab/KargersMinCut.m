@@ -47,7 +47,7 @@ function [IG, ids] = KargersMinCut(IG, ids)
 		sum1 = sum(sum(IG1));
 		sum2 = sum(sum(IG2));
 
-		if sum1 > sum2
+		if sum1 < sum2
 			IG = IG1;
 			ids = ids1;
 		else
