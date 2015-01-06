@@ -1,4 +1,8 @@
-function ids = SDPCut(similarity_matrix)
+function ids = SDPCut(similarity_matrix, k)
+
+	if nargin < 2
+		k = 2
+	end
 
 	% Defines and runs the SDP
 	gram_matrix = run_SDP(similarity_matrix);
@@ -32,12 +36,12 @@ function gram_matrix = run_SDP(similarity_matrix)
 
 end
 
-function ids = randomly_cluster(embedding)
+function ids = randomly_cluster(embedding, k)
 
 	s = size(embedding);
 
 	% Finding random points on the unit sphere
-	random_vectors = randn(s);
+	random_vectors = randn([k s(1)]);
 	random_vectors = bsxfun(@rdivide,random_vectors,sqrt(sum(random_vectors.^2,2)));
 
 	% Finding which random vector has the largest dot product
