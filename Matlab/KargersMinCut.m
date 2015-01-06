@@ -1,10 +1,28 @@
-function [IG, ids] = KargersMinCut(IG, ids)
+function [ids, value] = KargersMinCut(IG, num_iterations, k)
 
-	s = size(IG);
+	ids = num2cell(1:s(1));
 
-	if nargin < 2
-		ids = num2cell(1:s(1));
+	final_graphs = zeros([k k num_iterations]);
+	memberships = cell(num_iterations, 1);
+
+	for i = 1:num_iterations
+		
+		[final_graph membership] = KargerIter(IG, k, ids);
+
+		final_graphs(:,:,i) = final_graph;
+		memberships{i} = membership;
+
 	end
+
+	cut_edges = sum(sum(final_graphs)) / 2;
+	[value index] = min(cut_edges(:));
+
+	ids = memberships{index};
+
+end
+
+function [IG, ids] = KargerIter(IG, ids)
+	s = size(IG);
 
 	terminating_number_vertices = 2;
 	if s(1) > 6
@@ -40,8 +58,8 @@ function [IG, ids] = KargersMinCut(IG, ids)
 
 	if s(1) > 2
 		%Recursing
-		[IG1 ids1] = KargersMinCut(IG, ids);
-		[IG2 ids2] = KargersMinCut(IG, ids);
+		[IG1 ids1] = KargerIter(IG, ids);
+		[IG2 ids2] = KargerIter(IG, ids);
 
 		%Determining min cut by remaining edges left
 		sum1 = sum(sum(IG1));
