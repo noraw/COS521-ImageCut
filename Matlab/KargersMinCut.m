@@ -19,7 +19,7 @@ function [ids, value] = KargersMinCut(IG, num_iterations, k)
 	cut_edges = sum(sum(final_graphs)) / 2;
 	[value index] = min(cut_edges(:));
 
-	ids = memberships{index};
+	ids = make_ids(memberships{index}, s(1));
 
 end
 
@@ -105,5 +105,17 @@ function [new_graph, ids] = contractGraph(IG, r, c, ids)
 	new_graph(:,1) = [0; (IG(ind,r) + IG(ind,c))];
 
 	new_graph(2:end, 2:end) = IG(ind, ind);
+
+end
+
+function ids = make_ids(membership_array, num_vertices)
+
+	ids = zeros(1, num_vertices);
+
+	for i = 1:length(membership_array)
+
+		ids(membership_array{i}) = i;
+
+	end
 
 end
