@@ -37,7 +37,7 @@ function ids = randomly_cluster(embedding)
 	s = size(embedding);
 
 	% Finding random points on the unit sphere
-	random_vectors = randn(s');
+	random_vectors = randn(s);
 	random_vectors = bsxfun(@rdivide,random_vectors,sqrt(sum(random_vectors.^2,2)));
 
 	% Finding which random vector has the largest dot product
