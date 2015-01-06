@@ -1,6 +1,5 @@
 function [IG, ids] = KargersMinCut(IG, ids)
 
-
 	s = size(IG);
 
 	if nargin < 2
@@ -13,27 +12,49 @@ function [IG, ids] = KargersMinCut(IG, ids)
 	end
 
 	while s(1) > terminating_number_vertices
-	noSelfLoops = IG - diag(diag(IG));
+		noSelfLoops = IG - diag(diag(IG));
 
-	total_sum = sum(noSelfLoops(:));
-	cumulative_sum = cumsum(noSelfLoops(:));
+		total_sum = sum(noSelfLoops(:));
+		cumulative_sum = cumsum(noSelfLoops(:));
 
-	% Selecting random edge
-	threshold_value = rand() * total_sum;
-	i = find(cumulative_sum > threshold_value, 1);
+		% Selecting random edge
+		threshold_value = rand() * total_sum;
+		i = find(cumulative_sum > threshold_value, 1);
 
-	%Finding coordinates of selected edge
-	r = mod(i,s(1));
-	c = ceil(i / s(1));
-	if(r == 0)
-		r = s(1);
-	end
+		%Finding coordinates of selected edge
+		r = mod(i,s(1));
+		c = ceil(i / s(1));
+		if(r == 0)
+			r = s(1);
+		end
 
 	%disp(i)
 	%disp(r)
 	%disp(c)
 
-	[IG, ids] = contractGraph(noSelfLoops, r, c, ids);
+		[IG, ids] = contractGraph(noSelfLoops, r, c, ids);
+
+		s = size(IG);
+
+	end % while
+
+	if s(1) > 2
+		%Recursing
+		[IG1 ids1] = KargersMinCut(IG, ids);
+		[IG2 ids2] = KargersMinCut(IG, ids);
+
+		%Determining min cut by remaining edges left
+		sum1 = sum(sum(IG1));
+		sum2 = sum(sum(IG2));
+
+		if sum1 > sum2
+			IG = IG1;
+			ids = ids1;
+		else
+			IG = IG2;
+			ids = ids2;
+		end % sum if
+	end % recursion if
 
 end
 
