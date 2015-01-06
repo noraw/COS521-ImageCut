@@ -11,7 +11,7 @@ function ids = SDPCut(similarity_matrix, k)
 	embedding = chol(gram_matrix);
 
 	% Clusters the resulting vectors by alignment with random vectors
-	ids = randomly_cluster(embedding);
+	ids = randomly_cluster(embedding, k);
 
 end
 
