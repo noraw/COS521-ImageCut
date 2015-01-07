@@ -60,11 +60,12 @@ classdef imageToGraph
 
         function IG = createGraph(IG)
             for i1 = 1 : IG.rows
+                i1
                 for j1 = 1 : IG.columns
-                    for i2 = max(i1-IG.r, 1) : min(i1+IG.r, IG.columns)
+                    for i2 = max(i1-IG.r, 1) : min(i1+IG.r, IG.rows)
                         for j2 = max(j1-IG.r, 1) : min(j1+IG.r, IG.columns)
                             p1 = [i1, j1];
-                            p2 = [i2, j2];                        
+                            p2 = [i2, j2];    
                             dist = norm(p1 - p2);
                             if dist < IG.r
                                 EDist = exp(-dist^2 / IG.oX);
