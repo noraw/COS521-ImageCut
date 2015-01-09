@@ -35,7 +35,7 @@ function [IG, ids] = KargerIter(IG, k, ids)
 		noSelfLoops = IG - diag(diag(IG));
 
 
-		r,c = select_random_edge(noSelfLoops);
+		[r,c] = select_random_edge(noSelfLoops);
 
 		[IG, ids] = contractGraph(noSelfLoops, r, c, ids);
 
@@ -98,20 +98,20 @@ function [new_graph, ids] = contractGraph(graph, r, c, ids)
 
 	% Combining the indices of the selected edge, and sorting them
 	%  in line with the new ids
-	[i,j,values] = combine_indices(r,c, i,j);
+	[i,j] = combine_indices(r,c, i,j);
 
 	% Summing duplicate entries
 	[i,j,values] = consolidate_combined_edges(i,j,values);
 
 	% Creating new sparse graph
-	new_graph = sparse(i,j,values, s(1),s(2));
+	new_graph = sparse(i,j,values, s_new(1),s_new(2));
 
 	% Removing self loop
 	new_graph(1,1) = 0;
 
 end
 
-function [i,j,values] = combine_indices(index1, index2, i,j)
+function [i,j] = combine_indices(index1, index2, i,j)
 
 	i(i == index1) = 0;
 	j(j == index1) = 0;
