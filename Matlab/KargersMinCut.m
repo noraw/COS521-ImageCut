@@ -9,7 +9,7 @@ function [ids, value] = KargersMinCut(IG, num_iterations, k)
 
 	for i = 1:num_iterations
 		
-		[final_graph membership] = KargerIter(IG, k, ids);
+		[final_graph membership] = KargerIter(IG, k, ids)
 
 		final_graphs(:,:,i) = final_graph;
 		memberships{i} = membership;
@@ -34,19 +34,23 @@ function [IG, ids] = KargerIter(IG, k, ids)
 	while s(1) > terminating_number_vertices
 		noSelfLoops = IG - diag(diag(IG));
 
-
+		%disp('selecting edge')
 		[r,c] = select_random_edge(noSelfLoops);
 
+		%disp('contracting graph')
 		[IG, ids] = contractGraph(noSelfLoops, r, c, ids);
 
 		s = size(IG);
+		disp('current graph size: ')
+		disp(s)
+		
 
 	end % while
 
 	if s(1) > k
 		%Recursing
-		[IG1 ids1] = KargerIter(IG, k, ids);
-		[IG2 ids2] = KargerIter(IG, k, ids);
+		[IG1 ids1] = KargerIter(IG, k, ids)
+		[IG2 ids2] = KargerIter(IG, k, ids)
 
 		%Determining min cut by number of cut edges
 		sum1 = sum(sum(IG1));
@@ -89,6 +93,7 @@ function [new_graph, ids] = contractGraph(graph, r, c, ids)
 	[i,j,values] = find(graph);
 	s_new = s-1;
 
+	disp('making new ids')
 	ind = ones( s(1), 1 );
 	ind = logical(ind);
 	ind(r) = 0;
@@ -98,12 +103,15 @@ function [new_graph, ids] = contractGraph(graph, r, c, ids)
 
 	% Combining the indices of the selected edge, and sorting them
 	%  in line with the new ids
+	disp('combine_indices')
 	[i,j] = combine_indices(r,c, i,j);
 
 	% Summing duplicate entries
+	disp('consolidating')
 	[i,j,values] = consolidate_combined_edges(i,j,values);
 
 	% Creating new sparse graph
+	disp('creating new graph')
 	new_graph = sparse(i,j,values, s_new(1),s_new(2));
 
 	% Removing self loop
@@ -143,23 +151,22 @@ function [i,j,values] = consolidate_combined_edges(i,j,values)
 	s = size(paired_indices);
 
 	[sorted_paired_indices locations] = sortrows(paired_indices);
-	duplicates = [];
 
-	for row = 1:(s(1) - 1)
+	next_rows = sorted_paired_indices(2:end, :);
+	next_rows = [next_rows; 0 0];
+	comparisons = sorted_paired_indices - next_rows;
+	duplicate_sorted_indices = find(max(comparisons,[],2) == 0);
+	duplicates = [locations(duplicate_sorted_indices) locations(duplicate_sorted_indices+1)];
 
-		if min(sorted_paired_indices(row,:) == sorted_paired_indices(row+1,:))
-			row_locations = [locations(row) locations(row+1)];
-			duplicates = [duplicates; row_locations];
-		end
+	if length(duplicates > 0)
+		% Summing duplicate entries within first slot
+		values(duplicates(:,1)) = values(duplicates(:,1)) + values(duplicates(:,2));
 
+		% Removing second duplicate entry from all lists
+		i(duplicates(:,2)) = [];
+		j(duplicates(:,2)) = [];
+		values(duplicates(:,2)) = [];
 	end
-
-	% Summing duplicate entry duplicates within first slot
-	values(duplicates(:,1)) = values(duplicates(:,1)) + values(duplicates(:,2));
-	% Removing second duplicate entry from all lists
-	i(duplicates(:,2)) = [];
-	j(duplicates(:,2)) = [];
-	values(duplicates(:,2)) = [];
 
 end
 
