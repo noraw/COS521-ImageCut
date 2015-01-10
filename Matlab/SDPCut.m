@@ -5,7 +5,7 @@ function ids = SDPCut(similarity_matrix, k)
 	end
 
 	% Defines and runs the SDP
-	gram_matrix = run_SDP(similarity_matrix);
+	gram_matrix = run_SDP(similarity_matrix)
 
 	% Factors the gram matrix into embedded vectors
 	embedding = chol(gram_matrix);
