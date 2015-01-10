@@ -14,7 +14,7 @@ function [ids, value] = KargersMinCut(IG, num_iterations, k)
 	for i = 1:num_iterations
 	
 		% Each iteration returns a sparse graph and combined cluster groups
-		[final_graph membership] = KargerIter(IG, k, ids);
+		[final_graph membership] = KargerIter(IG, k, ids)
 
 		% In order to store the sparse graphs, it's sometimes
 		%  necessary to get rid of any disconnected nodes
@@ -90,7 +90,7 @@ function [IG, ids] = KargerIter(IG, k, ids)
 		% Making sure each cluster returned is connected to the graph
 		[i,j,s] = find(IG);
 		% IG = sparse(i,j,s); % Don't think this is necessary anymore
-		ids = {ids{sort(i)}};
+		ids = {ids{unique(i)}};
 
 	end % recursion if
 
