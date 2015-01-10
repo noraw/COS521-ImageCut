@@ -9,9 +9,14 @@ function [ids, value] = KargersMinCut(IG, num_iterations, k)
 
 	for i = 1:num_iterations
 		
-		[final_graph membership] = KargerIter(IG, k, ids)
+		[final_graph membership] = KargerIter(IG, k, ids);
 
-		final_graphs(:,:,i) = full(final_graph);
+		full_final = full(final_graph);
+		full_final(sum(full_final) == 0,:) = [];
+		full_final(:,sum(full_final) == 0) = [];
+
+		disp(full_final)
+		final_graphs(:,:,i) = full_final;
 		memberships{i} = membership;
 
 	end
@@ -19,6 +24,7 @@ function [ids, value] = KargersMinCut(IG, num_iterations, k)
 	cut_edges = sum(sum(final_graphs)) / 2;
 	[value index] = min(cut_edges(:));
 
+	disp(memberships{index})
 	ids = format_ids(memberships{index}, k, s(1));
 
 end
@@ -67,6 +73,11 @@ function [IG, ids] = KargerIter(IG, k, ids)
 			IG = IG2;
 			ids = ids2;
 		end % sum if
+	else
+		[i,j,s] = find(IG);
+		IG = sparse(i,j,s);
+
+		ids = {ids{i}};
 	end % recursion if
 
 end
@@ -122,7 +133,7 @@ function [new_graph, ids] = contractGraph(graph, r, c, ids)
 
 	% Creating new sparse graph
 	disp('creating new graph')
-	new_graph = sparse(i,j,values, s_new(1),s_new(2));
+	new_graph = sparse(i,j,values);
 
 	% Removing self loop
 	new_graph(1,1) = 0;
