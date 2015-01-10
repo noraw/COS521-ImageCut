@@ -24,6 +24,7 @@ function gram_matrix = run_SDP(similarity_matrix)
 	variables gram_matrix(s) semidefinite
 
 	% Max magnitude of each vector is 1
+	gram_matrix >= 0
 	diag(gram_matrix) == ones(s(1),1)
 
 	% Objective Function
