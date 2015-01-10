@@ -5,7 +5,7 @@ function ids = SDPCut(similarity_matrix, k)
 	end
 
 	% Defines and runs the SDP
-	gram_matrix = run_SDP(similarity_matrix);
+	gram_matrix = run_SDP(similarity_matrix)
 
 	% Factors the gram matrix into embedded vectors
 	embedding = chol(gram_matrix);
@@ -21,11 +21,10 @@ function gram_matrix = run_SDP(similarity_matrix)
 
 	cvx_begin SDP
 
-	variables gram_matrix(s)
+	variable gram_matrix(s) semidefinite
 
-	% The variables should form a PSD matrix
-	gram_matrix == semidefinite(s(1))
 	% Max magnitude of each vector is 1
+	gram_matrix >= 0
 	diag(gram_matrix) == ones(s(1),1)
 
 	% Objective Function
