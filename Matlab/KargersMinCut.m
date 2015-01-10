@@ -19,7 +19,7 @@ function [ids, value] = KargersMinCut(IG, num_iterations, k)
 	cut_edges = sum(sum(final_graphs)) / 2;
 	[value index] = min(cut_edges(:));
 
-	ids = format_ids(memberships{index}, s(1));
+	ids = format_ids(memberships{index}, k, s(1));
 
 end
 
@@ -27,11 +27,15 @@ function [IG, ids] = KargerIter(IG, k, ids)
 	s = size(IG);
 
 	terminating_number_vertices = k;
-	if s(1) > 3*k
-		terminating_number_vertices = s(1) / sqrt(2) + 1;
+	% Figuring out how many nodes are still connected
+	%  to the graph within a sparse matrix
+	num_nodes_left = nnl(IG);
+
+	if num_nodes_left > 3*k
+		num_nodes_left = edges_left / sqrt(2) + 1;
 	end
 
-	while s(1) > terminating_number_vertices
+	while num_nodes_left > terminating_number_vertices
 		noSelfLoops = IG - diag(diag(IG));
 
 		%disp('selecting edge')
@@ -40,9 +44,9 @@ function [IG, ids] = KargerIter(IG, k, ids)
 		%disp('contracting graph')
 		[IG, ids] = contractGraph(noSelfLoops, r, c, ids);
 
-		s = size(IG);
+		num_nodes_left = nnl(IG);
 		disp('current graph size: ')
-		disp(s)
+		disp(num_nodes_left)
 		
 
 	end % while
@@ -64,6 +68,13 @@ function [IG, ids] = KargerIter(IG, k, ids)
 			ids = ids2;
 		end % sum if
 	end % recursion if
+
+end
+
+function num_nodes_left = nnl(sparse_graph)
+
+	[i,j,s] = find(sparse_graph);
+	num_nodes_left = length(unique(i));
 
 end
 
@@ -91,7 +102,6 @@ function [new_graph, ids] = contractGraph(graph, r, c, ids)
 
 	s = size(graph);
 	[i,j,values] = find(graph);
-	s_new = s-1;
 
 	disp('making new ids')
 	ind = ones( s(1), 1 );
@@ -170,14 +180,12 @@ function [i,j,values] = consolidate_combined_edges(i,j,values)
 
 end
 
-function ids = format_ids(membership_array, num_vertices)
+function ids = format_ids(membership_array, k, num_nodes)
 
-	ids = zeros(1, num_vertices);
+	ids = zeros(num_nodes, k);
 
-	for i = 1:length(membership_array)
-
-		ids(membership_array{i}) = i;
-
+	for i = 1:k
+		ids(membership_array{i}, i) = 1;
 	end
 
 end
