@@ -155,7 +155,7 @@ function [i,j,values] = consolidate_combined_edges(i,j,values)
 	next_rows = sorted_paired_indices(2:end, :);
 	next_rows = [next_rows; 0 0];
 	comparisons = sorted_paired_indices - next_rows;
-	duplicate_sorted_indices = find(max(comparisons,[],2) == 0);
+	duplicate_sorted_indices = find(min(comparisons,[],2) == 0);
 	duplicates = [locations(duplicate_sorted_indices) locations(duplicate_sorted_indices+1)];
 
 	if length(duplicates > 0)
