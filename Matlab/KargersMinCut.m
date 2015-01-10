@@ -2,8 +2,10 @@ function [ids, value] = KargersMinCut(IG, num_iterations, k)
 
 	s = size(IG);
 
+	% Making initial "cluster groups"
 	ids = num2cell(1:s(1));
 
+	
 	final_graphs = zeros([k k num_iterations]);
 	memberships = cell(num_iterations, 1);
 
@@ -38,7 +40,7 @@ function [IG, ids] = KargerIter(IG, k, ids)
 	num_nodes_left = nnl(IG);
 
 	if num_nodes_left > 3*k
-		num_nodes_left = edges_left / sqrt(2) + 1;
+		num_nodes_left = num_nodes_left / sqrt(2) + 1;
 	end
 
 	while num_nodes_left > terminating_number_vertices
@@ -77,7 +79,7 @@ function [IG, ids] = KargerIter(IG, k, ids)
 		[i,j,s] = find(IG);
 		IG = sparse(i,j,s);
 
-		ids = {ids{i}};
+		ids = {ids{sort(i)}};
 	end % recursion if
 
 end
@@ -114,7 +116,7 @@ function [new_graph, ids] = contractGraph(graph, r, c, ids)
 	s = size(graph);
 	[i,j,values] = find(graph);
 
-	disp('making new ids')
+	%disp('making new ids')
 	ind = ones( s(1), 1 );
 	ind = logical(ind);
 	ind(r) = 0;
@@ -124,15 +126,15 @@ function [new_graph, ids] = contractGraph(graph, r, c, ids)
 
 	% Combining the indices of the selected edge, and sorting them
 	%  in line with the new ids
-	disp('combine_indices')
+	%disp('combine_indices')
 	[i,j] = combine_indices(r,c, i,j);
 
 	% Summing duplicate entries
-	disp('consolidating')
+	%disp('consolidating')
 	[i,j,values] = consolidate_combined_edges(i,j,values);
 
 	% Creating new sparse graph
-	disp('creating new graph')
+	%disp('creating new graph')
 	new_graph = sparse(i,j,values);
 
 	% Removing self loop
