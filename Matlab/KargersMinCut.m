@@ -51,7 +51,7 @@ function [IG, ids] = KargerIter(IG, k, ids)
 
 	end % while
 
-	if s(1) > k
+	if num_nodes_left > k
 		%Recursing
 		[IG1 ids1] = KargerIter(IG, k, ids)
 		[IG2 ids2] = KargerIter(IG, k, ids)
