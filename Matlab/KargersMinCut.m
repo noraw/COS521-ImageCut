@@ -11,7 +11,7 @@ function [ids, value] = KargersMinCut(IG, num_iterations, k)
 		
 		[final_graph membership] = KargerIter(IG, k, ids)
 
-		final_graphs(:,:,i) = final_graph;
+		final_graphs(:,:,i) = full(final_graph);
 		memberships{i} = membership;
 
 	end
