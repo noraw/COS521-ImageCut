@@ -79,18 +79,13 @@ classdef imageToGraph
                     end
                 end
             end
-%            for i = 1 : IG.n
-%                for j = 1 : IG.n
-%                    XDist = pictureDistance(IG, i, j);
-%                    if XDist < IG.r
-%                        EDist = exp(-XDist^2 / IG.oX);
-%                        FDist = colorDistance(IG, i, j);
-%                        EColor = exp(-FDist^2 / IG.oI);
-%                        weight = EColor * EDist;
-%                        IG.graph(i, j) = weight;
-%                    end
-%                end
-%            end
+        end
+        function image = convertGraphVectorToImage(IG, v)
+            image = zeros(IG.rows, IG.columns);
+            for i = 1: IG.n
+                pos = graphIDToImagePosition(IG, i);
+                image(pos(1),  pos(2)) = v(i);
+            end
         end
     end
     

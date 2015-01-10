@@ -20,7 +20,7 @@ classdef NormalizedCut
         end
  
         function K = normalizedCutIntoKParts(NC, k)
-            steps = floor(log2(k));
+            steps = k-1; %floor(log2(k));
             A = ones(1, NC.n);
             K = zeros(NC.n, 1);
             K = recursiveNC(NC, NC.W, steps, A, K);
@@ -36,7 +36,16 @@ classdef NormalizedCut
             D2 = sum(W, 2);
             % D2 is D^(-1/2) in the paper
             D2 = spdiags(sqrt(1 ./ D2), [0], NC.n, NC.n);
-            [V, E] = eigs((D2 * (D-W) * D2)*NC.eps*speye, 2, 'sm');
+            [V, E] = eigs((D2 * (D-W) * D2)+NC.eps*speye, 2, 'sm');
+            %A = D-W;
+            %B = D;
+            %A = A + NC.eps*speye;
+            %[V, E] = eigs(A, B, 2, 'sm');
+            %[v,c]=eig(full(A),full(B));
+            %[E,P] = sort(real(c),'descend'); % Here I am assuming you know all the eigenvalues have` negative real parts
+            %index = P(2);
+            %V(:,1) = v(:,index); % corresponding eigenvector
+            %V(:,2) = v(:,index); % corresponding eigenvector
             [S, cut] = splitOnEigIn2(NC, V, A);
             Wa = makeGraph(NC, S(1, :));
             Wb = makeGraph(NC, S(2, :));
