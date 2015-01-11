@@ -1,17 +1,27 @@
-function ids = SDPCut(similarity_matrix, k)
+function [ids, gram_matrix] = SDPCut(similarity_matrix, k)
 
 	if nargin < 2
 		k = 2
 	end
 
+	s = size(similarity_matrix);
+
+	% Gets rid of disconnected nodes
+	[i,j,s] = find(similarity_matrix);
+	[unique_nodes iai ici] = unique(i);
+	[unique_nodes iaj icj] = unique(j);
+	parsimonious_graph = sparse(ici, icj, s);
+
 	% Defines and runs the SDP
-	gram_matrix = run_SDP(similarity_matrix);
+	gram_matrix = run_SDP(parsimonious_graph);
 
 	% Factors the gram matrix into embedded vectors
 	embedding = chol(gram_matrix);
 
 	% Clusters the resulting vectors by alignment with random vectors
 	ids = randomly_cluster(embedding, k);
+
+	ids = format_ids(ids, 2 ^ k, s(1), unique_nodes);
 
 end
 
@@ -46,6 +56,21 @@ function ids = randomly_cluster(embedding, k)
 
 	% Finding which random vector has the largest dot product
 	%  with each embedded vector
-	positive_dot_product = (random_vectors * embedding) >= 0;
+	positive_dot_product = ((random_vectors * embedding) >= 0)';
+
+	twos = ones(1, k) * 2;
+	powers_of_two = (twos.^[0:(k-1)])';
+
+	ids = (positive_dot_product * powers_of_two) + 1;
+
+end
+
+function new_ids = format_ids(ids, k, num_original_nodes, node_ids)
+
+	new_ids = zeros(num_original_nodes, k);
+
+	for i = 1:k	
+		new_ids(node_ids,i) = (ids == i);
+	end
 
 end
