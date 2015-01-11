@@ -46,6 +46,6 @@ function ids = randomly_cluster(embedding, k)
 
 	% Finding which random vector has the largest dot product
 	%  with each embedded vector
-	[m, ids] = max(random_vectors * embedding);
+	positive_dot_product = (random_vectors * embedding) >= 0;
 
 end
