@@ -2,3 +2,26 @@ Graph:(200, 100, 50)
 Elapsed time is 145.717238 seconds.
 Elapsed time is 7.042224 seconds.
 Elapsed time is 0.576107 seconds.
+
+k=1
+ROOT-A. Ncut = 0.023893
+ROOT-B. Ncut = 0.144614
+Elapsed time is 0.312057 seconds.
+
+k=2
+ROOT-A-A. Ncut = 0.093128
+ROOT-A-B. Ncut = 0.249466
+ROOT-B-A. Ncut = 0.047694
+ROOT-B-B. Ncut = 0.033974
+Elapsed time is 0.358474 seconds.
+
+k=3
+ROOT-A-A-A. Ncut = 0.250150
+ROOT-A-A-B. Ncut = 0.307749
+ROOT-A-B-A. Ncut = 0.243789
+ROOT-A-B-B. Ncut = 0.071570
+ROOT-B-A-A. Ncut = 0.048567
+ROOT-B-A-B. Ncut = 0.038458
+ROOT-B-B-A. Ncut = 0.073710
+ROOT-B-B-B. Ncut = 0.062515
+Elapsed time is 0.891434 seconds.

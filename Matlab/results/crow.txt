@@ -2,3 +2,18 @@ Graph:(200, 100, 50)
 Elapsed time is 56.187101 seconds.
 Elapsed time is 1.900735 seconds.
 Elapsed time is 0.362018 seconds.
+
+k=1
+ROOT-A. Ncut = 0.042629
+ROOT-B. Ncut = 0.047689
+Elapsed time is 0.228997 seconds.
+
+k=2
+ROOT-A-A. Ncut = 0.019063
+ROOT-A-B. Ncut = 0.219205
+ROOT-B-A. Ncut = 0.096219
+ROOT-B-B. Ncut = 0.152585
+Elapsed time is 0.509157 seconds.
+
+k=3
+eigs error
