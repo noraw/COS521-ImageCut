@@ -8,10 +8,10 @@ function [ids, gram_matrix] = SDPCut(similarity_matrix, k)
 
 	% Gets rid of disconnected nodes
 	disp('forming parsimonious graph...')
-	[i,j,s] = find(similarity_matrix);
+	[i,j,values] = find(similarity_matrix);
 	[unique_nodes iai ici] = unique(i);
 	[unique_nodes iaj icj] = unique(j);
-	parsimonious_graph = sparse(ici, icj, s);
+	parsimonious_graph = sparse(ici, icj, values);
 
 	% Defines and runs the SDP
 	gram_matrix = run_SDP(parsimonious_graph)
@@ -34,11 +34,12 @@ function gram_matrix = run_SDP(similarity_matrix)
 	cvx_begin SDP
 
 	disp('adding variables...')
-	variables gram_matrix(s)
+	variable gram_matrix(s) semidefinite
 
 	disp('adding constraints...')
 	% The variables should form a PSD matrix
-	gram_matrix == semidefinite(s(1))
+	gram_matrix >= 0
+%	gram_matrix(:) >= 0
 	% Max magnitude of each vector is 1
 	diag(gram_matrix) == ones(s(1),1)
 

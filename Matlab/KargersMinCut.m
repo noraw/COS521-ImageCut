@@ -48,7 +48,8 @@ function [IG, ids] = KargerIter(IG, k, ids)
 	num_nodes_left = nnl(IG);
 
 	if num_nodes_left > 3*k
-		terminating_number_vertices = num_nodes_left / sqrt(2) + 1;
+		root_of_two = 2 * (k-1);
+		terminating_number_vertices = num_nodes_left / (2 ^ (1/root_of_two)) + 1;
 	end
 
 	while num_nodes_left > terminating_number_vertices

@@ -1,9 +1,6 @@
 tic
-load('data/baby.mat');
-g = IG.graph;
-g = g(1:1000, 1:1000);
-clear IG;
-t = SDPCut(g, 2)
+load('data/50/baby.mat');
+t = SDPCut(W, 1)
 t
 toc
 
