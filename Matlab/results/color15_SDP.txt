@@ -1,0 +1,6 @@
+k=1
+>> >> Elapsed time is 1735.054218 seconds.
+k=2
+>> >> Elapsed time is 1174.477119 seconds.
+k=3
+>> >> Elapsed time is 1132.418014 seconds.
