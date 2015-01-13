@@ -15,7 +15,9 @@ function [ids, value] = KargersMinCut(IG, num_iterations, k)
 	for i = 1:num_iterations
 	
 		% Each iteration returns a sparse graph and combined cluster groups
-		[final_graph membership] = KargerIter(IG, k, ids)
+		disp('iteration: ')
+		disp(i)
+		[final_graph membership] = KargerIter(IG, k, ids);
 
 		% In order to store the sparse graphs, it's sometimes
 		%  necessary to get rid of any disconnected nodes
@@ -23,6 +25,7 @@ function [ids, value] = KargersMinCut(IG, num_iterations, k)
 		full_final(sum(full_final) == 0,:) = [];
 		full_final(:,sum(full_final) == 0) = [];
 
+		disp(membership)
 		% Storing output
 		final_graphs(:,:,i) = full_final;
 		memberships{i} = membership;
@@ -66,15 +69,16 @@ function [IG, ids] = KargerIter(IG, k, ids)
 		[IG, ids] = contractGraph(noSelfLoops, r, c, ids);
 
 		num_nodes_left = nnl(IG);
-		disp('current graph size: ')
-		disp(num_nodes_left)
+		%disp('current graph size: ')
+		%disp(num_nodes_left)
 
 	end % while
 
 	if num_nodes_left > k
 		%Recursing
-		[IG1 ids1] = KargerIter(IG, k, ids)
-		[IG2 ids2] = KargerIter(IG, k, ids)
+		%disp('recursing')
+		[IG1 ids1] = KargerIter(IG, k, ids);
+		[IG2 ids2] = KargerIter(IG, k, ids);
 
 		%Determining min cut by number of cut edges
 		sum1 = sum(sum(IG1));
@@ -95,6 +99,9 @@ function [IG, ids] = KargerIter(IG, k, ids)
 		ids = {ids{unique(i)}};
 
 	end % recursion if
+
+	%disp('Iteration complete')
+	%disp(ids)
 
 end
 
