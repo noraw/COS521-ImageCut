@@ -117,8 +117,8 @@ function [i,j] = select_random_edge(graph)
 	% [ii,jj,ss] = find(graph);
 
 	% Picking source node
-	total_sum = sum(ss);
 	vertex_sum = sum(graph);
+	total_sum = sum(vertex_sum);
 	threshold_value = rand() * total_sum;
 
 	index = 0;
@@ -132,13 +132,15 @@ function [i,j] = select_random_edge(graph)
 	i = index;
 
 	% Picking destination node
+%	disp('vertex_sum')
+%	disp(vertex_sum(index));
 	threshold_value = rand() * vertex_sum(index);
 
-	index = 0
+	index = 0;
 	while threshold_value > 0
 
 		index = index + 1;
-		threshold_value = threshold_value - graph(i,index);
+		threshold_value = threshold_value - graph(index,i);
 
 	end
 
